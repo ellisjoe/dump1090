@@ -701,6 +701,7 @@ char *aircraftsToJson(int *len) {
 #define MODES_CONTENT_TYPE_CSS  "text/css;charset=utf-8"
 #define MODES_CONTENT_TYPE_JSON "application/json;charset=utf-8"
 #define MODES_CONTENT_TYPE_JS   "application/javascript;charset=utf-8"
+#define MODES_CONTENT_TYPE_SVG  "image/svg+xml;charset=utf-8"
 //
 // Get an HTTP request header and write the response to the client.
 // gain here we assume that the socket buffer is enough without doing
@@ -745,7 +746,7 @@ int handleHTTPRequest(struct client *c, char *p) {
         printf("\nHTTP keep alive: %d\n", keepalive);
         printf("HTTP requested URL: %s\n\n", url);
     }
-    
+
     if (strlen(url) < 2) {
         snprintf(getFile, sizeof getFile, "%s/gmap.html", HTMLPATH); // Default file
     } else {
@@ -759,6 +760,17 @@ int handleHTTPRequest(struct client *c, char *p) {
         statuscode = 200;
         content = aircraftsToJson(&clen);
         //snprintf(ctype, sizeof ctype, MODES_CONTENT_TYPE_JSON);
+    } else if (strstr(url, "/mapbox_config.json")) {
+        int buflen = 1024; // The initial buffer is incremented as needed
+        content = (char *) malloc(buflen);
+
+        if (Modes.mapbox_token) {
+            clen = snprintf(content, buflen, "{\"token\":\"%s\"}", Modes.mapbox_token);
+            statuscode = 200;
+        } else {
+            clen = snprintf(content, buflen, "Server Error: No Mapbox token configured");
+            statuscode = 500;
+        }
     } else {
         struct stat sbuf;
         int fd = -1;
@@ -803,6 +815,8 @@ int handleHTTPRequest(struct client *c, char *p) {
             snprintf(ctype, sizeof ctype, MODES_CONTENT_TYPE_CSS);
         } else if (strstr(ext, ".js")) {
             snprintf(ctype, sizeof ctype, MODES_CONTENT_TYPE_JS);
+        } else if (strstr(ext, ".svg")) {
+            snprintf(ctype, sizeof ctype, MODES_CONTENT_TYPE_SVG);
         }
     }
 

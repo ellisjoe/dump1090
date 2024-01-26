@@ -30,3 +30,14 @@ table#optionsTabs { width: 100%; font-size: small; font-family: monospace; backg
 
 .pointer { cursor: pointer; }
 
+.marker {
+    background-image: url('plane.svg');
+    background-size: cover;
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+    cursor: pointer;
+    color: red;
+    fill: red;
+}
+
