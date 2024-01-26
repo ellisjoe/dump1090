@@ -744,6 +744,8 @@ int main(int argc, char **argv) {
             Modes.fUserLat = atof(argv[++j]);
         } else if (!strcmp(argv[j],"--lon") && more) {
             Modes.fUserLon = atof(argv[++j]);
+        } else if (!strcmp(argv[j],"--mapbox-token") && more) {
+            Modes.mapbox_token = strdup(argv[++j]);
         } else if (!strcmp(argv[j],"--debug") && more) {
             char *f = argv[++j];
             while(*f) {
