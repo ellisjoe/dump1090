@@ -46,12 +46,14 @@ To run the program in interactive mode:
 To run the program in interactive mode, with networking support, and connect
 with your browser to http://localhost:8080 to see live traffic:
 
-    ./dump1090 --interactive --net
+    ./dump1090 --interactive --net --mapbox-token <token>
 
 In iteractive mode it is possible to have a less information dense but more
 "arcade style" output, where the screen is refreshed every second displaying
 all the recently seen aircrafts with some additional information such as
 altitude and flight number, extracted from the received Mode S packets.
+
+Mapbox tokens can be created [here](https://account.mapbox.com/access-tokens/).
 
 Using files as source of data
 ---
