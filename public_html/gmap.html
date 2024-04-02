@@ -17,6 +17,21 @@
     var Planes = {};
     var map;
 
+    function createTable(item) {
+        let hex = item.hex.toUpperCase();
+        let table = '<div>';
+        table += `<b>Hex:</b> ${hex}<br/>`;
+        table += `<b>Squawk:</b> ${item.squawk}<br/>`;
+        table += `<b>Flight:</b> ${item.flight}<br/>`;
+        table += `<b>Altitude (ft):</b> ${item.altitude}<br/>`;
+        table += `<b>Vertical Rate (ft/min):</b> ${item.vert_rate}<br/>`;
+        table += `<b>Speed (kts):</b> ${item.speed}<br/>`;
+        table += `<b>Messages:</b> ${item.messages}<br/>`;
+        table += `<b>Seen (sec):</b> ${item.seen}<br/>`;
+        table += '</div>';
+        return table;
+    }
+
     function fetchData() {
         $.getJSON('/dump1090/data.json', function (data) {
             console.log("Pulled new data", data)
@@ -26,7 +41,8 @@
                     continue
                 }
 
-                let popup = new mapboxgl.Popup().setHTML("Hex: " + data[i].hex);
+                let table = createTable(data[i]);
+                let popup = new mapboxgl.Popup({maxWidth: null}).setHTML(table);
 
                 let plane = Planes[data[i].hex];
                 if (plane) {
@@ -35,6 +51,7 @@
                     plane.marker
                         .setLngLat([data[i].lon, data[i].lat])
                         .setRotation(data[i].track)
+                    plane.popup.setHTML(table);
                 } else {
                     let svg = document.createElement('object');
                     svg.data = 'plane.svg';
@@ -53,7 +70,8 @@
                     Planes[data[i].hex] = {
                         marker: marker,
                         seen: data[i].seen,
-                        updated: new Date().getTime()
+                        updated: new Date().getTime(),
+                        popup: popup
                     };
                 }
             }
