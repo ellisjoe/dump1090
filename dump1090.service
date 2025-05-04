@@ -1,0 +1,12 @@
+[Unit]
+Description=Dump 1090
+After=network.target
+
+[Service]
+Type=simple
+Restart=always
+ExecStart=/bin/bash /home/jellis/services/dump1090.sh
+TimeoutStartSec=0
+
+[Install]
+WantedBy=default.target
